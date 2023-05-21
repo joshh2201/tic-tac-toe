@@ -54,39 +54,43 @@ const gameBoard = (() => {
   };
   const updateGameBoard = (position, symbol) => {
     board[position] = symbol;
-    if (checkWin(position, symbol)) {
-      console.log(`${game.getCurrPlayer().getName()} wins`);
-    } else if (game.getTurn() > 8) {
-      // game is tied if there is no winner after 8 turns
-      console.log('tied');
-    } else {
-      console.log('play on');
-    }
+    return checkWin(position, symbol);
   };
-  return { updateGameBoard, fullBoard };
+  return { updateGameBoard };
 })();
 
 const displayController = ((document) => {
+  const displayResult = (result) => {
+    const resultDiv = document.querySelector('.result');
+    if (result) {
+      resultDiv.innerText = `${game.getCurrPlayer().getName()} Wins!`;
+    } else {
+      resultDiv.innerText = 'Tie Game!';
+    }
+  };
   function squareClick(e) {
     if (!this.innerText) {
       const position = this.getAttribute('data-index');
       const symbol = game.getCurrPlayer().getSymbol();
-      gameBoard.updateGameBoard(position, symbol);
+      const result = gameBoard.updateGameBoard(position, symbol);
+      if (result || (!result && game.getTurn() > 8)) {
+        displayResult(result);
+        // disable eventlisteners
+      }
       this.innerText = symbol;
       game.changeTurn();
-      // change turns here
     }
   }
-  const initializeGameBoard = ((doc) => {
+  const initializeGameBoard = (() => {
     // inject 9 divs into game board grid
-    const boardDisplay = doc.querySelector('.game-board');
+    const boardDisplay = document.querySelector('.game-board');
     let square = null;
     for (let i = 0; i < 9; i += 1) {
-      square = doc.createElement('div');
+      square = document.createElement('div');
       square.setAttribute('class', 'square');
       square.setAttribute('data-index', i);
       square.addEventListener('click', squareClick);
       boardDisplay.appendChild(square);
     }
-  })(document);
+  })();
 })(document);
