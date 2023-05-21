@@ -1,3 +1,25 @@
+const Player = (name, symbol) => {
+  const getName = () => name;
+  const getSymbol = () => symbol;
+  return { getName, getSymbol };
+};
+
+const game = (() => {
+  const playerOne = Player('p1', 'X');
+  const playerTwo = Player('p2', 'O');
+  let currPlayer = playerOne;
+
+  const changeTurn = () => {
+    if (currPlayer === playerOne) {
+      currPlayer = playerTwo;
+    } else {
+      currPlayer = playerOne;
+    }
+  };
+  const getCurrPlayer = () => currPlayer;
+  return { changeTurn, getCurrPlayer };
+})();
+
 const gameBoard = (() => {
   const board = new Array(9);
   const checkWin = (position, symbol) => {
@@ -30,7 +52,7 @@ const gameBoard = (() => {
   const updateGameBoard = (position, symbol) => {
     board[position] = symbol;
     if (checkWin(position, symbol)) {
-      console.log('win');
+      console.log(`${game.getCurrPlayer().getName()} wins`);
     } else {
       console.log('play on');
     }
@@ -42,7 +64,11 @@ const displayController = ((document) => {
   function squareClick(e) {
     if (!this.innerText) {
       const position = this.getAttribute('data-index');
-      gameBoard.updateGameBoard(position, 'x');
+      const symbol = game.getCurrPlayer().getSymbol();
+      gameBoard.updateGameBoard(position, symbol);
+      this.innerText = symbol;
+      game.changeTurn();
+      // change turns here
     }
   }
   const initializeGameBoard = ((doc) => {
@@ -58,9 +84,3 @@ const displayController = ((document) => {
     }
   })(document);
 })(document);
-
-const Player = (name, symbol) => {
-  const getName = () => name;
-  const getSymbol = () => symbol;
-  return { getName, getSymbol };
-};
