@@ -7,6 +7,7 @@ const Player = (name, symbol) => {
 const game = (() => {
   const playerOne = Player('p1', 'X');
   const playerTwo = Player('p2', 'O');
+  let turn = 1;
   let currPlayer = playerOne;
 
   const changeTurn = () => {
@@ -15,9 +16,11 @@ const game = (() => {
     } else {
       currPlayer = playerOne;
     }
+    turn += 1;
   };
   const getCurrPlayer = () => currPlayer;
-  return { changeTurn, getCurrPlayer };
+  const getTurn = () => turn;
+  return { changeTurn, getCurrPlayer, getTurn };
 })();
 
 const gameBoard = (() => {
@@ -53,11 +56,14 @@ const gameBoard = (() => {
     board[position] = symbol;
     if (checkWin(position, symbol)) {
       console.log(`${game.getCurrPlayer().getName()} wins`);
+    } else if (game.getTurn() > 8) {
+      // game is tied if there is no winner after 8 turns
+      console.log('tied');
     } else {
       console.log('play on');
     }
   };
-  return { updateGameBoard };
+  return { updateGameBoard, fullBoard };
 })();
 
 const displayController = ((document) => {
