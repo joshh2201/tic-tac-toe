@@ -1,0 +1,35 @@
+body,
+html {
+  margin: 0;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+}
+
+.header {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  grid-column: 2 / 3;
+}
+.game-board {
+  justify-content: center;
+  margin-top: 1rem;
+  grid-column: 2 / 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 150px));
+  grid-template-rows: repeat(3, minmax(200px, 150px));
+  gap: 10px;
+}
+
+.square {
+  background-color: lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Varela Round';
+  font-size: 8rem;
+}
