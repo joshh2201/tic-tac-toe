@@ -38,9 +38,26 @@ const gameBoard = (() => {
   return { updateGameBoard };
 })();
 
-const displayController = (() => {
-  console.log('hello');
-})();
+const displayController = ((document) => {
+  function squareClick(e) {
+    if (!this.innerText) {
+      const position = this.getAttribute('data-index');
+      gameBoard.updateGameBoard(position, 'x');
+    }
+  }
+  const initializeGameBoard = ((doc) => {
+    // inject 9 divs into game board grid
+    const boardDisplay = doc.querySelector('.game-board');
+    let square = null;
+    for (let i = 0; i < 9; i += 1) {
+      square = doc.createElement('div');
+      square.setAttribute('class', 'square');
+      square.setAttribute('data-index', i);
+      square.addEventListener('click', squareClick);
+      boardDisplay.appendChild(square);
+    }
+  })(document);
+})(document);
 
 const Player = (name, symbol) => {
   const getName = () => name;
