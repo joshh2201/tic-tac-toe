@@ -68,16 +68,22 @@ const displayController = ((document) => {
       resultDiv.innerText = 'Tie Game!';
     }
   };
+  const disableSquareClick = () => {
+    [...document.querySelectorAll('.square')].forEach((square) => {
+      square.setAttribute('data-filled', true);
+    });
+  };
   function squareClick(e) {
-    if (!this.innerText) {
+    if (!this.getAttribute('data-filled')) {
       const position = this.getAttribute('data-index');
       const symbol = game.getCurrPlayer().getSymbol();
       const result = gameBoard.updateGameBoard(position, symbol);
       if (result || (!result && game.getTurn() > 8)) {
         displayResult(result);
-        // disable eventlisteners
+        disableSquareClick();
       }
       this.innerText = symbol;
+      this.setAttribute('data-filled', true);
       game.changeTurn();
     }
   }
