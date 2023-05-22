@@ -9,7 +9,6 @@ const game = (() => {
   const playerTwo = Player('p2', 'O');
   let turn = 1;
   let currPlayer = playerOne;
-
   const changeTurn = () => {
     if (currPlayer === playerOne) {
       currPlayer = playerTwo;
@@ -18,9 +17,13 @@ const game = (() => {
     }
     turn += 1;
   };
+  const resetGame = () => {
+    currPlayer = playerOne;
+    turn = 1;
+  };
   const getCurrPlayer = () => currPlayer;
   const getTurn = () => turn;
-  return { changeTurn, getCurrPlayer, getTurn };
+  return { changeTurn, getCurrPlayer, getTurn, resetGame };
 })();
 
 const gameBoard = (() => {
@@ -56,7 +59,12 @@ const gameBoard = (() => {
     board[position] = symbol;
     return checkWin(position, symbol);
   };
-  return { updateGameBoard };
+  const resetBoard = () => {
+    for (let i = 0; i < 9; i += 1) {
+      board[i] = null;
+    }
+  };
+  return { updateGameBoard, resetBoard, board };
 })();
 
 const displayController = ((document) => {
@@ -78,14 +86,25 @@ const displayController = ((document) => {
       const position = this.getAttribute('data-index');
       const symbol = game.getCurrPlayer().getSymbol();
       const result = gameBoard.updateGameBoard(position, symbol);
+      this.innerText = symbol;
+      this.setAttribute('data-filled', true);
       if (result || (!result && game.getTurn() > 8)) {
         displayResult(result);
         disableSquareClick();
+      } else {
+        game.changeTurn();
       }
-      this.innerText = symbol;
-      this.setAttribute('data-filled', true);
-      game.changeTurn();
     }
+  }
+  function resetGameBoard(e) {
+    const resultDiv = document.querySelector('.result');
+    resultDiv.innerText = '';
+    [...document.querySelectorAll('.square')].forEach((square) => {
+      square.removeAttribute('data-filled');
+      square.innerText = '';
+    });
+    game.resetGame();
+    gameBoard.resetBoard();
   }
   const initializeGameBoard = (() => {
     // inject 9 divs into game board grid
@@ -98,5 +117,7 @@ const displayController = ((document) => {
       square.addEventListener('click', squareClick);
       boardDisplay.appendChild(square);
     }
+    const resetBtn = document.querySelector('.reset');
+    resetBtn.addEventListener('click', resetGameBoard);
   })();
 })(document);
