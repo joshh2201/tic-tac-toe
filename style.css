@@ -33,3 +33,12 @@ html {
   font-family: 'Varela Round';
   font-size: 8rem;
 }
+
+.result {
+  margin-top: 1rem;
+  grid-column: 2 / 3;
+}
+.navigation {
+  margin-top: 1rem;
+  grid-column: 2 / 3;
+}
