@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const Player = (name, symbol) => {
   const getName = () => name;
   const getSymbol = () => symbol;
@@ -67,7 +68,7 @@ const gameBoard = (() => {
   return { updateGameBoard, resetBoard, board };
 })();
 
-const displayController = ((document) => {
+const displayController = ((document, window) => {
   const displayResult = (result) => {
     const resultDiv = document.querySelector('.result');
     if (result) {
@@ -81,7 +82,7 @@ const displayController = ((document) => {
       square.setAttribute('data-filled', true);
     });
   };
-  function squareClick(e) {
+  function squareClick() {
     if (!this.getAttribute('data-filled')) {
       const position = this.getAttribute('data-index');
       const symbol = game.getCurrPlayer().getSymbol();
@@ -96,7 +97,7 @@ const displayController = ((document) => {
       }
     }
   }
-  function resetGameBoard(e) {
+  function resetGameBoard() {
     const resultDiv = document.querySelector('.result');
     resultDiv.innerText = '';
     [...document.querySelectorAll('.square')].forEach((square) => {
@@ -105,6 +106,9 @@ const displayController = ((document) => {
     });
     game.resetGame();
     gameBoard.resetBoard();
+  }
+  function redirectMenu() {
+    window.location.href = './index.html';
   }
   const initializeGameBoard = (() => {
     // inject 9 divs into game board grid
@@ -119,5 +123,8 @@ const displayController = ((document) => {
     }
     const resetBtn = document.querySelector('.reset');
     resetBtn.addEventListener('click', resetGameBoard);
+
+    const menuBtn = document.querySelector('.menu');
+    menuBtn.addEventListener('click', redirectMenu);
   })();
-})(document);
+})(document, window);
