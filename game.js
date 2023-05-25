@@ -5,9 +5,12 @@ const Player = (name, symbol) => {
   return { getName, getSymbol };
 };
 
-const game = (() => {
-  const playerOne = Player('p1', 'X');
-  const playerTwo = Player('p2', 'O');
+const game = ((window) => {
+  const params = new URLSearchParams(window.location.search);
+  const playerOne = Player(params.get('p1'), 'X');
+  if (params.get('p2')) {
+    const playerTwo = Player(params.get('p2'), 'O');
+  }
   let turn = 1;
   let currPlayer = playerOne;
   const changeTurn = () => {
@@ -25,7 +28,7 @@ const game = (() => {
   const getCurrPlayer = () => currPlayer;
   const getTurn = () => turn;
   return { changeTurn, getCurrPlayer, getTurn, resetGame };
-})();
+})(window);
 
 const gameBoard = (() => {
   const board = new Array(9);
