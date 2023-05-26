@@ -59,7 +59,7 @@ const SimpleAI = (symbol) => {
   const makeMove = () => {
     const moves = gameBoard.getMoves();
     const moveIdx = Math.floor(Math.random() * moves.length);
-    document.querySelector(`[data-index="${moves[moveIdx]}"]`).click();
+    return moves[moveIdx];
   };
   return { getName, getSymbol, makeMove };
 };
@@ -82,9 +82,6 @@ const game = ((window) => {
       currPlayer = playerOne;
     }
     turn += 1;
-    if (typeof currPlayer.makeMove === 'function') {
-      playerTwo.makeMove();
-    }
   };
   const resetGame = () => {
     currPlayer = playerOne;
@@ -121,6 +118,10 @@ const displayController = ((document, window) => {
         disableSquareClick();
       } else {
         game.changeTurn();
+        if (typeof game.getCurrPlayer().makeMove === 'function') {
+          const move = game.getCurrPlayer().makeMove();
+          document.querySelector(`[data-index="${move}"]`).click();
+        }
       }
     }
   }
