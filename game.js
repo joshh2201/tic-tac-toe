@@ -55,8 +55,7 @@ const Player = (name, symbol) => {
 };
 
 const SimpleAI = (symbol) => {
-  const getName = () => 'EasyAI';
-  const getSymbol = () => symbol;
+  const { getName, getSymbol } = Player('EasyAI', symbol);
   const makeMove = () => {
     const moves = gameBoard.getMoves();
     const moveIdx = Math.floor(Math.random() * moves.length);
