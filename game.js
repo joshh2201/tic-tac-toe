@@ -1,35 +1,4 @@
 /* eslint-disable no-param-reassign */
-const Player = (name, symbol) => {
-  const getName = () => name;
-  const getSymbol = () => symbol;
-  return { getName, getSymbol };
-};
-
-const game = ((window) => {
-  const params = new URLSearchParams(window.location.search);
-  const playerOne = Player(params.get('p1'), 'X');
-  if (params.get('p2')) {
-    const playerTwo = Player(params.get('p2'), 'O');
-  }
-  let turn = 1;
-  let currPlayer = playerOne;
-  const changeTurn = () => {
-    if (currPlayer === playerOne) {
-      currPlayer = playerTwo;
-    } else {
-      currPlayer = playerOne;
-    }
-    turn += 1;
-  };
-  const resetGame = () => {
-    currPlayer = playerOne;
-    turn = 1;
-  };
-  const getCurrPlayer = () => currPlayer;
-  const getTurn = () => turn;
-  return { changeTurn, getCurrPlayer, getTurn, resetGame };
-})(window);
-
 const gameBoard = (() => {
   const board = new Array(9);
   const checkWin = (position, symbol) => {
@@ -51,7 +20,6 @@ const gameBoard = (() => {
     }
     // rowStart is the index of the element in the first col of a row
     const rowStart = position - (position % 3);
-    console.log(rowStart);
     let j = 0;
     while (j < 3) {
       if (board[rowStart + j] !== symbol) rowWin = false;
@@ -68,8 +36,65 @@ const gameBoard = (() => {
       board[i] = null;
     }
   };
-  return { updateGameBoard, resetBoard, board };
+  const getMoves = () => {
+    const moves = [];
+    for (let i = 0; i < board.length; i += 1) {
+      if (board[i] !== 'X' && board[i] !== 'O') {
+        moves.push(i);
+      }
+    }
+    return moves;
+  };
+  return { updateGameBoard, resetBoard, board, getMoves };
 })();
+
+const Player = (name, symbol) => {
+  const getName = () => name;
+  const getSymbol = () => symbol;
+  return { getName, getSymbol };
+};
+
+const SimpleAI = (symbol) => {
+  const getName = () => 'EasyAI';
+  const getSymbol = () => symbol;
+  const makeMove = () => {
+    const moves = gameBoard.getMoves();
+    const moveIdx = Math.floor(Math.random() * moves.length);
+    document.querySelector(`[data-index="${moves[moveIdx]}"]`).click();
+  };
+  return { getName, getSymbol, makeMove };
+};
+
+const game = ((window) => {
+  const params = new URLSearchParams(window.location.search);
+  const playerOne = Player(params.get('p1'), 'X');
+  let playerTwo;
+  if (params.get('p2')) {
+    playerTwo = Player(params.get('p2'), 'O');
+  } else {
+    playerTwo = SimpleAI('O');
+  }
+  let turn = 1;
+  let currPlayer = playerOne;
+  const changeTurn = () => {
+    if (currPlayer === playerOne) {
+      currPlayer = playerTwo;
+    } else {
+      currPlayer = playerOne;
+    }
+    turn += 1;
+    if (typeof currPlayer.makeMove === 'function') {
+      playerTwo.makeMove();
+    }
+  };
+  const resetGame = () => {
+    currPlayer = playerOne;
+    turn = 1;
+  };
+  const getCurrPlayer = () => currPlayer;
+  const getTurn = () => turn;
+  return { changeTurn, getCurrPlayer, getTurn, resetGame };
+})(window);
 
 const displayController = ((document, window) => {
   const displayResult = (result) => {
