@@ -27,6 +27,12 @@ const gameBoard = (() => {
     }
     return colWin || rowWin || diagWin;
   };
+  const getBoard = () => board;
+  function setBoard(newBoard) {
+    for (let i = 0; i < board.length; i += 1) {
+      board[i] = newBoard[i];
+    }
+  }
   const updateGameBoard = (position, symbol) => {
     board[position] = symbol;
     return checkWin(position, symbol);
@@ -45,7 +51,7 @@ const gameBoard = (() => {
     }
     return moves;
   };
-  return { updateGameBoard, resetBoard, board, getMoves };
+  return { updateGameBoard, resetBoard, getBoard, setBoard, getMoves };
 })();
 
 const Player = (name, symbol) => {
@@ -60,6 +66,43 @@ const SimpleAI = (symbol) => {
     const moves = gameBoard.getMoves();
     const moveIdx = Math.floor(Math.random() * moves.length);
     return moves[moveIdx];
+  };
+  return { getName, getSymbol, makeMove };
+};
+
+const MiniMaxAI = (symbol) => {
+  const { getName, getSymbol } = Player('ImpossibleAI', symbol);
+  function minimax(board, move, playerTurn) {
+    const result = gameBoard.updateGameBoard(move.index, move.symbol);
+    const moves = gameBoard.getMoves();
+    // human player is the maximizing player
+    if (result === true && playerTurn) {
+      return 10;
+    } else if (result === true && !playerTurn) {
+      return -10;
+    } else if (moves.length === 0) {
+      return 0;
+    }
+    if (playerTurn) {
+      let maxEval = -Infinity;
+      moves.forEach((move) => {
+        maxEval = Math.max(maxEval, minimax(board, move, false));
+      });
+      console.log('hi');
+    } else {
+      let minEval = +Infinity;
+      moves.forEach((move) => {
+        minEval = Math.min(minEval, minimax(board, move, false));
+      });
+      console.log('hi');
+    }
+  }
+  const makeMove = () => {
+    const originalBoard = [...gameBoard.getBoard()];
+    // testing minimax with no depth restriction
+    const moves = gameBoard.getMoves();
+    gameBoard.updateGameBoard(1, symbol);
+    gameBoard.setBoard(originalBoard);
   };
   return { getName, getSymbol, makeMove };
 };
