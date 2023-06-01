@@ -14,31 +14,33 @@
       <div class="game-mode">
         <button class="toggle">Two Players</button>
         <form action="./game.html" class="two-player" method="GET">
-          <div class="form-title">Enter Your Names</div>
-          <div class="input">
+          <div class="form-div">
+            <div class="form-title">Enter Your Names</div>
             <input type="text" name="p1" id="p1" required placeholder="Player One" />
-          </div>
-          <div class="input">
             <input type="text" name="p2" id="p2" required placeholder="Player Two" />
+            <button type="submit" class="submit">Submit</button>
           </div>
-          <button type="submit" class="submit">Submit</button>
         </form>
       </div>
       <div class="game-mode">
         <button class="toggle">Single Player</button>
         <form action="./game.html" class="one-player" method="GET">
-          <div class="form-title">Enter Your Name</div>
-          <div>
+          <div class="form-div">
+            <div class="form-title">Enter Your Name</div>
             <input type="text" name="p1" id="p1" required placeholder="Player One" />
+            <div class="form-title">Select Difficulty</div>
+            <div class="difficulty">
+              <div>
+                <label for="easy">Easy</label>
+                <input type="radio" name="difficulty" id="easy" value="easy" checked />
+              </div>
+              <div>
+                <label for="impossible">Impossible</label>
+                <input type="radio" name="difficulty" id="impossible" value="impossible" />
+              </div>
+            </div>
+            <button type="submit" class="submit">Submit</button>
           </div>
-          <div>Select Difficulty</div>
-          <div>
-            <label for="easy">Easy</label>
-            <input type="radio" name="difficulty" id="easy" value="easy" checked />
-            <label for="impossible">Impossible</label>
-            <input type="radio" name="difficulty" id="impossible" value="impossible" />
-          </div>
-          <button type="submit" class="submit">Submit</button>
         </form>
       </div>
     </div>
