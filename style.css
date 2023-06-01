@@ -41,6 +41,9 @@ html {
 .navigation {
   margin-top: 1rem;
   grid-column: 2 / 3;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
 }
 
 .game-mode {
@@ -85,7 +88,7 @@ button {
   align-items: center;
 }
 
-.difficulty {
+.difficulty{
   display: flex;
   gap: 30px;
 }
